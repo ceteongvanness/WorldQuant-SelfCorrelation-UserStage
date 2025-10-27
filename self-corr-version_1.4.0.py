@@ -8,7 +8,7 @@
 1. 同文件夹下创建名为brain_credentials.txt的文件，
 里面的格式为：["账号", "密码"]
 2. 将ALPHA_LIST里面的值替换成你需要检测的id
-3. 终端里运行python3 self-corr-version_1.3.0.py 即可
+3. 终端里运行python3 self-corr-version_1.4.0.py 即可
 -----------------------------------------------------------------
 Updated：Oct 12, 2025
 Version 1.1.0版，新增了推荐提升alpha的功能
@@ -19,7 +19,11 @@ Version 1.2.0版，将alpha_list和csv文件提升为全局变量
 -----------------------------------------------------------------
 Updated：Oct 17, 2025
 Version 1.3.0版，csv文件显示Fail的alpha能否提升
+-----------------------------------------------------------------
+Updated：Oct 28, 2025
+Version 1.4.0版，控制台输出格式优化
 '''
+
 
 import requests
 import pandas as pd
@@ -38,8 +42,10 @@ from requests.auth import HTTPBasicAuth
 # ---------------- 全局参数 ----------------
 CORR_CUTOFF = 0.7         # 相关性阈值：<=0.7必Pass；>0.7触发Sharpe对比
 SHARPE_PREMIUM = 1.10     # 被测Sharpe至少需高出“相关peer中最大Sharpe”10%
-CSV_FILE = "Oct17_推荐提升Alpha.csv"
-ALPHA_LIST =  ["E55k06Lm","O008X237","xAAN22Xg"]
+CSV_FILE = "Test.csv"
+ALPHA_LIST = [
+               "XgGje9b1", "kqdqj1xL", "88b8Jdlq"
+             ]
 
 # ---------------- 登录 ----------------
 def sign_in(username, password):
@@ -314,9 +320,8 @@ if __name__ == "__main__":
 
     if len(pass_ids) > 0:
         print("通过的 Alpha ID：")
-        for i in range(0, len(pass_ids), 10):
-            group = pass_ids[i:i + 10]
-            print("  " + ", ".join(group))
+        # 一行输出，带引号
+        print("  " + ", ".join(f'"{x}"' for x in pass_ids))
     else:
         print("没有通过的 Alpha。")
 
@@ -339,9 +344,8 @@ if __name__ == "__main__":
     print(f"推荐提升Alpha：共{len(recommend_ids)}条记录")
     if recommend_ids:
         print("Alpha ID：")
-        for i in range(0, len(recommend_ids), 10):
-            group = recommend_ids[i:i + 10]
-            print("  " + ", ".join(group))
+        # 一行输出，带引号
+        print("  " + ", ".join(f'"{x}"' for x in recommend_ids))
     else:
         print("暂无符合条件的推荐Alpha。")
     print("=" * 100)
